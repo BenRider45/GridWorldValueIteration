@@ -6,7 +6,7 @@
 
 import numpy as np
 
-
+import copy
 ## Constants
 GAMMA = 0.8
 
@@ -73,14 +73,13 @@ def ValueIteration(grid,actions,maxIter):
                     
 
                     newGrid[i][j] = max(possibleValues)
-        print(grid)
         
 
     return newGrid
 
     
 def computePolicy(grid,actions):
-    newPolicy = policy
+    newPolicy = copy.deepcopy(policy)
     for j in range(grid.shape[1]):
             for i in range(grid.shape[0]):
                 possibleValues = [0]*4
@@ -112,12 +111,24 @@ def computePolicy(grid,actions):
 def main():
     Grid = BuildGrid(2,3,0)
     print(Grid)
-
-    newGrid = ValueIteration(Grid,actions,6)
-
-    newPolicy = computePolicy(newGrid,actions)
-
-    print(newPolicy)
     
+    FoundPolicy = policy
+    print(FoundPolicy)
+    for i in range(1,4):
+
+        newGrid = ValueIteration(Grid,actions,i)
+
+        iterPolicy = computePolicy(newGrid,actions)
+        
+        print("========i: ",i,"=======")
+        print(newGrid)
+        print("LastPolicy = ",FoundPolicy)
+        print("NewPolicy = ",iterPolicy)
+        if(FoundPolicy==iterPolicy):
+            print("Convergence after ",i," iterations with policy:")
+            print(iterPolicy)
+        else:
+            FoundPolicy = iterPolicy
+
     
 main()

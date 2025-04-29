@@ -29,7 +29,7 @@ def BuildGrid(ROWS,COLS,initValue):
         
     return grid
 
-## Modify this to have ROWS*COLS entries
+## Modify this to have ROWS*COLS entries, number is immediate reward from action
 #T=Terminal State
 actions = {
     (0,0):([("D",0),("R",0)]),
@@ -50,8 +50,9 @@ policy = {
     (1,2):("LU")
 
 }
-
-def ValueIteration(grid,actions,maxIter):
+##Uses Value Iteration Algorithm which assigns the value of our state to the highest value that can be attained from that state, 
+# I.e choosing the action which maximizes value. rather than implementing Bellman-equality
+def GreedyValueIteration(grid,actions,maxIter):
     newGrid = grid
     for k in range(maxIter):
         for j in range(grid.shape[1]):
@@ -77,7 +78,7 @@ def ValueIteration(grid,actions,maxIter):
 
     return newGrid
 
-    
+## Computes the optimal policy based on given values for states
 def computePolicy(grid,actions):
     newPolicy = copy.deepcopy(policy)
     for j in range(grid.shape[1]):
@@ -109,14 +110,16 @@ def computePolicy(grid,actions):
     return newPolicy
 
 def main():
-    Grid = BuildGrid(2,3,0)
+    ROWS = 2
+    COLS = 3
+    Grid = BuildGrid(ROWS,COLS,0)
     print(Grid)
-    
+    print(policy[0,1])
     FoundPolicy = policy
     print(FoundPolicy)
-    for i in range(1,4):
+    for i in range(1,10):
 
-        newGrid = ValueIteration(Grid,actions,i)
+        newGrid = GreedyValueIteration(Grid,actions,i)
 
         iterPolicy = computePolicy(newGrid,actions)
         
@@ -124,9 +127,12 @@ def main():
         print(newGrid)
         print("LastPolicy = ",FoundPolicy)
         print("NewPolicy = ",iterPolicy)
+        EQUAL = 1
+
         if(FoundPolicy==iterPolicy):
             print("Convergence after ",i," iterations with policy:")
             print(iterPolicy)
+            break
         else:
             FoundPolicy = iterPolicy
 

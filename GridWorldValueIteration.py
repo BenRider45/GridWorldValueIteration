@@ -78,6 +78,8 @@ def GreedyValueIteration(grid,actions,maxIter):
 
     return newGrid
 
+
+
 ## Computes the optimal policy based on given values for states
 def computePolicy(grid,actions):
     newPolicy = copy.deepcopy(policy)
@@ -109,14 +111,22 @@ def computePolicy(grid,actions):
                         newPolicy[(i,j)] += "L"
     return newPolicy
 
+def getPolicyArr(policy,ROWS,COLS):
+    policyArr = np.full((ROWS,COLS),"    ")
+
+    for i in range(ROWS):
+        for j in range(COLS):
+            policyArr[i][j] = policy[(i,j)]
+    
+    return policyArr     
+
 def main():
     ROWS = 2
     COLS = 3
     Grid = BuildGrid(ROWS,COLS,0)
     print(Grid)
-    print(policy[0,1])
     FoundPolicy = policy
-    print(FoundPolicy)
+    print(getPolicyArr(FoundPolicy,ROWS,COLS))
     for i in range(1,10):
 
         newGrid = GreedyValueIteration(Grid,actions,i)
@@ -125,16 +135,17 @@ def main():
         
         print("========i: ",i,"=======")
         print(newGrid)
-        print("LastPolicy = ",FoundPolicy)
-        print("NewPolicy = ",iterPolicy)
-        EQUAL = 1
+        print("LastPolicy :\n",getPolicyArr(FoundPolicy,ROWS,COLS))
+        print("NewPolicy :\n",getPolicyArr(iterPolicy,ROWS,COLS))
 
         if(FoundPolicy==iterPolicy):
-            print("Convergence after ",i," iterations with policy:")
-            print(iterPolicy)
+            print("Convergence after ",i," iterations with policy :")
+            iterPolicyArr = getPolicyArr(iterPolicy,ROWS,COLS)
+            print(iterPolicyArr)
             break
         else:
             FoundPolicy = iterPolicy
+
 
     
 main()

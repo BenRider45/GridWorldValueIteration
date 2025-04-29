@@ -5,7 +5,7 @@
 
 
 import numpy as np
-
+import random
 import copy
 ## Constants
 GAMMA = 0.8
@@ -52,11 +52,17 @@ policy = {
 }
 ##Uses Value Iteration Algorithm which assigns the value of our state to the highest value that can be attained from that state, 
 # I.e choosing the action which maximizes value. rather than implementing Bellman-equality
-def GreedyValueIteration(grid,actions,maxIter):
+def InPlaceValueIteration(grid,actions,maxIter):
     newGrid = grid
+
+    iList = [i for i,g in enumerate(range(grid.shape[0]))]
+    jList = [j for j,g in enumerate(range(grid.shape[1]))]
+    
     for k in range(maxIter):
-        for j in range(grid.shape[1]):
-            for i in range(grid.shape[0]):
+        random.shuffle(iList)
+        random.shuffle(jList)
+        for j in jList:
+            for i in iList:
                 v = grid[i][j]
                 possibleValues = []
                 if actions[(i,j)][0][0]=="T":
@@ -83,6 +89,7 @@ def GreedyValueIteration(grid,actions,maxIter):
 ## Computes the optimal policy based on given values for states
 def computePolicy(grid,actions):
     newPolicy = copy.deepcopy(policy)
+
     for j in range(grid.shape[1]):
             for i in range(grid.shape[0]):
                 possibleValues = [0]*4
@@ -129,7 +136,7 @@ def main():
     print(getPolicyArr(FoundPolicy,ROWS,COLS))
     for i in range(1,10):
 
-        newGrid = GreedyValueIteration(Grid,actions,i)
+        newGrid = InPlaceValueIteration(Grid,actions,i)
 
         iterPolicy = computePolicy(newGrid,actions)
         
